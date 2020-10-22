@@ -8,6 +8,7 @@ import AuthService from "./services/auth.service";
 import Login from "./components/Login";
 import Home from "./components/Home";
 import Role from "./components/Role";
+import Department from "./components/Department/Department";
 // import Priority from "./components/Priority";
 // import Signup from "./components/Signup";
 
@@ -49,6 +50,11 @@ function App() {
                             </Link>
                         </Menu.Item>
                         <Menu.Item key="4">
+                            <Link to={"/departments"}>
+                                Department
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key="5">
                             <a className="nav-link" onClick={logOut}>
                                 LogOut
                             </a>
@@ -64,6 +70,7 @@ function App() {
                             <Route exact path={["/", "/home"]} component={Home}/>
                             <Route exact path="/login" component={Login}/>
                             <Route exact path="/role" component={Role}/>
+                            <Route exact path="/departments" component={Department}/>
                             {/* <Route exact path="/priority" component={Priority}/> */}
                             {/* <Route exact path="/signup" component={Signup}/> */}
                         </Switch>
