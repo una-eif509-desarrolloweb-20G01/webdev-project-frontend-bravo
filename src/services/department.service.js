@@ -13,8 +13,8 @@ const create = data => {
     return http.post("/departments", data, { headers: authHeader() });
 };
 
-const update = (data) => {
-    return http.put(`/departments/`, data, { headers: authHeader() });
+const update = (id, data) => {
+    return http.put(`/departments/${id}`, data, { headers: authHeader() });
 };
 
 const remove = id => {

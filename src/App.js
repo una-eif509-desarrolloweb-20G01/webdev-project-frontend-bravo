@@ -8,7 +8,7 @@ import AuthService from "./services/auth.service";
 import Login from "./components/Login";
 import Home from "./components/Home";
 import Role from "./components/Role";
-import Department from "./components/Department/Department";
+import DepartmentEditableTable from "./components/DepartmentEditableTable/DepartmentEditableTable";
 // import Priority from "./components/Priority";
 // import Signup from "./components/Signup";
 
@@ -70,7 +70,7 @@ function App() {
                             <Route exact path={["/", "/home"]} component={Home}/>
                             <Route exact path="/login" component={Login}/>
                             <Route exact path="/role" component={Role}/>
-                            <Route exact path="/departments" component={Department}/>
+                            <Route exact path="/departments" component={DepartmentEditableTable}/>
                             {/* <Route exact path="/priority" component={Priority}/> */}
                             {/* <Route exact path="/signup" component={Signup}/> */}
                         </Switch>
