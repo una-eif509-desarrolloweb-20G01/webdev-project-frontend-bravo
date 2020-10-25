@@ -1,33 +1,43 @@
 import React, {useState, useEffect} from "react";
 import {Form, Alert, Input, Button} from 'antd';
-import {EyeInvisibleOutlined, EyeTwoTone, UserOutlined} from '@ant-design/icons';
+import {EyeInvisibleOutlined, EyeTwoTone, UserOutlined, LockOutlined, MailOutlined} from '@ant-design/icons';
 
-import UserService from "../services/user.service";
+import UserService from "../../services/user.service";
 
 const layout = {
     labelCol: {
-        span: 2,
+        offset: 0,
+        span: 3,
     },
     wrapperCol: {
-        span: 3,
+        offset: 0,
+        span: 6,
     },
 };
 
 const tailLayout = {
     wrapperCol: {
-        offset: 2,
-        span: 8,
+        offset: 1,
+        span: 6,
     },
 };
 
 const initialUserState = {
-    "idUser": null,
-    "firstName" : "",
-    "lastName" : "",
-    "email" : "",
-    "username": "",
-    "password": ""
-};
+    firstName: "",
+    lastName: "",
+    email: "",
+    username: "",
+    password: "",
+    enabled: true,
+    role: {
+        id: 2,
+        name: "ROLE_USER"
+    },
+    department: {
+        id: 2,
+        name: "Finanzas"
+    }
+}
 
 const Signup = (props) => {
     const [form] = Form.useForm();
@@ -49,19 +59,17 @@ const Signup = (props) => {
             })
             .catch(err => {
                 console.log(err);
-                setError(err)
+                setError(err);
             });
     }
 
     /** Handle actions in the Form **/
-
     const handleInputChange = event => {
         let {name, value} = event.target;
         setUser({...user, [name]: value});
     };
 
     /** General Methods **/
-
     const onFinish = data => {
         console.log(user);
         signUpMethod();
@@ -86,6 +94,7 @@ const Signup = (props) => {
                 >
                     <Input
                         name="firstName"
+                        prefix={<UserOutlined className="site-form-item-icon"/>}
                         onChange={handleInputChange}
                         placeholder="First Name"
                     />
@@ -101,6 +110,7 @@ const Signup = (props) => {
                 >
                     <Input
                         name="lastName"
+                        prefix={<UserOutlined className="site-form-item-icon"/>}
                         onChange={handleInputChange}
                         placeholder="Last Name"
                     />
@@ -116,6 +126,7 @@ const Signup = (props) => {
                 >
                     <Input
                         name="email"
+                        prefix={<MailOutlined className="site-form-item-icon"/>}
                         onChange={handleInputChange}
                         placeholder="Email"
                     />
@@ -147,13 +158,14 @@ const Signup = (props) => {
                 >
                     <Input.Password
                         name="password"
+                        prefix={<LockOutlined className="site-form-item-icon"/>}
                         onChange={handleInputChange}
-                        placeholder="your password"
+                        placeholder="Password"
                         iconRender={visible => (visible ? <EyeTwoTone/> : <EyeInvisibleOutlined/>)}
                     />
                 </Form.Item>
                 <Form.Item {...tailLayout}>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" htmlType="submit" style={{ marginRight: "10px"}}>
                         Submit
                     </Button>
                     <Button htmlType="button" onClick={onReset}>
@@ -162,7 +174,7 @@ const Signup = (props) => {
                 </Form.Item>
             </Form>
             {user.idUser > 0 ? (
-                <Alert message="User Saved" type="success" showIcon closable />
+                <Alert message="User saved" type="success" showIcon closable />
             ) : null}
             {error ? (
                 <Alert message="Error in the system. Try again later." type="error" showIcon closable/>

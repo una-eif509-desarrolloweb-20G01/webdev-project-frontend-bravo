@@ -2,6 +2,7 @@ import http from "../http-common";
 import authHeader from "./auth-header";
 
 const signup = data => {
+    console.log(data);
     return http.post("/users/sign-up", data);
 };
 

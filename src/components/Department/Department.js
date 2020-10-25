@@ -25,7 +25,7 @@ class Department extends Component {
 
     render() {
         return (
-            <>
+            <div className="component-department">
                 <h1>Create a new Department</h1>
                 <Form name="control-hooks" onFinish={this.onInsertClick}>
                     <Form.Item
@@ -46,10 +46,10 @@ class Department extends Component {
                     <Form.Item>
                         <Button type="primary" htmlType="submit">
                             Create
-                    </Button>
+                        </Button>
                     </Form.Item>
                 </Form>
-            </>
+            </div>
         );
     }
 }

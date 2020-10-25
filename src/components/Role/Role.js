@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {Alert, Table} from 'antd';
 
-import RoleService from "../services/role.service";
+import RoleService from "../../services/role.service";
 
 const initialRoleListState = [
     {
