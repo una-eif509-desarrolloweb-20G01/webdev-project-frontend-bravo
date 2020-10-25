@@ -1,25 +1,27 @@
+
+import './Login.scss';
+
 import React, {useState} from "react";
 import {Form, Input, Button, Alert} from 'antd';
-// import EyeInvisibleOutlined from '@ant-design/icons';
-// import EyeTwoTone from '@ant-design/icons';
-// import UserOutlined from '@ant-design/icons';
+import {EyeInvisibleOutlined, EyeTwoTone, UserOutlined, LockOutlined} from '@ant-design/icons';
 
-import {EyeInvisibleOutlined, EyeTwoTone, UserOutlined} from '@ant-design/icons';
-
-import AuthService from "../services/auth.service";
+import AuthService from "../../services/auth.service";
 
 const layout = {
     labelCol: {
-        span: 4,
+        offset: 0,
+        span: 3,
     },
     wrapperCol: {
+        offset: 0,
         span: 6,
     },
 };
+
 const tailLayout = {
     wrapperCol: {
         offset: 2,
-        span: 8,
+        span: 6,
     },
 };
 
@@ -41,6 +43,10 @@ const Login = (props) => {
                 console.log(login);
                 setLogin(response.data);
                 form.resetFields();
+
+                props.history.push("/home");
+                window.location.reload();
+
                 // props.history.push("/priority");
                 // props.history.push("/roles");
                 // window.location.reload();
@@ -52,25 +58,30 @@ const Login = (props) => {
     }
 
     /** Handle actions in the Form **/
-
     const handleInputChange = event => {
         let {name, value} = event.target;
         setLogin({...login, [name]: value});
     };
 
     /** General Methods **/
-
     const onFinish = data => {
         console.log(login);
         loginMethod();
     };
 
-    // const onReset = () => {
-    //     form.resetFields();
-    // };
+    const onReset = () => {
+        form.resetFields();
+    };
+
+    const toSignUp = () => {
+        props.history.push("/signup");
+        window.location.reload();
+    }
 
     return (
         <div>
+
+            {/* form */}
             <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
                 <Form.Item
                     name="username"
@@ -99,15 +110,21 @@ const Login = (props) => {
                 >
                     <Input.Password
                         name="password"
+                        prefix={<LockOutlined className="site-form-item-icon"/>}
                         onChange={handleInputChange}
-                        placeholder="your password"
+                        placeholder="Password"
                         iconRender={visible => (visible ? <EyeTwoTone/> : <EyeInvisibleOutlined/>)}
                     />
                 </Form.Item>
+
+                {/* button */}
                 <Form.Item {...tailLayout}>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" htmlType="submit" style={{marginRight: "10px"}}>
                         Login
                     </Button>
+                    {/* <Button htmlType="button" onClick={toSignUp}>
+                        Sign up
+                    </Button> */}
                 </Form.Item>
             </Form>
             {error ? (
