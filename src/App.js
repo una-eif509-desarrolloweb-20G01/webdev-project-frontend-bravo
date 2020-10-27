@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
 import {Layout, Menu, Breadcrumb} from 'antd';
 import 'antd/dist/antd.css';
+import logo from './logo.svg';
 import './App.css';
 
 import AuthService from "./services/auth.service";
@@ -13,6 +14,9 @@ import Home from "./components/Home/Home";
 import Department from "./components/Department/Department";
 import DepartmentEditableTable from "./components/DepartmentEditableTable/DepartmentEditableTable";
 import Role from "./components/Role/Role";
+
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import Unauthorized from "./components/Unauthorized/Unauthorized";
 
 function App() {
 
@@ -66,13 +70,13 @@ function App() {
                                 </Link>
                             </Menu.Item>
                         ): null}
-                        {currentUser ? (
-                            <Menu.Item key="2">
+                        {/* {currentUser ? ( */}
+                            <Menu.Item key="3">
                                 <Link to={"/departments"}>
                                     Department
                                 </Link>
                             </Menu.Item>
-                        ): null}
+                        {/* ): null} */}
                         {currentUser ? (
                             <Menu.Item key="3">
                                 <a href="/login" className="nav-link" onClick={logOut}>
@@ -97,6 +101,8 @@ function App() {
                             {/* <Route exact path="/departments" component={Department}/> */}
                             {/* <Route exact path="/roles" component={Role}/> */}
                             {/* <Route exact path="/priority" component={Priority}/> */}
+
+                            <ProtectedRoute exact path='/departments' user={currentUser} logOut={logOut} component={Department} />
                         </Switch>
                     </div>
                 </Content>
