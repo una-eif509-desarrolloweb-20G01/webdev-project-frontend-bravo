@@ -26,11 +26,16 @@ const remove = id => {
     return http.delete(`/users/${id}`, { headers: authHeader() });
 };
 
+const findUserByUserName = username => {
+    return http.get(`/users/find-by-username/${username}`, { headers: authHeader() });
+}
+
 export default {
     signup,
     getAll,
     get,
     create,
     update,
-    remove
+    remove,
+    findUserByUserName
 };

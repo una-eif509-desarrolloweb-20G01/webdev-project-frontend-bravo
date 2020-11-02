@@ -5,42 +5,37 @@ const signup = data => {
 };
 
 const login = data => {
+
     return http
-        .post('/login', data)
-        .then((response) => {
+    .post('/login', data)
+    .then((res) => {
 
-            console.log(response);
+        console.log(res);
 
-            if (response.headers.authorization) {
+        if (res.headers.authorization) {
 
-                // localStorage.setItem("user.headers", JSON.stringify(response.headers));
-                // localStorage.setItem("user.data", JSON.stringify(response.data));
-
-                localStorage.setItem("user", 
-                    JSON.stringify({
-                        headers: response.headers,
-                        data: response.data
-                    }
-                ));
-
-            }
-            return response.data;
-        });
+            localStorage.setItem("user.headers",  JSON.stringify({ headers: res.headers }));
+        }
+    });
 };
 
 const logout = () => {
-    // localStorage.removeItem("user.headers");
-    // localStorage.removeItem("user.data");
-    localStorage.removeItem("user");
+    localStorage.removeItem("user.headers");
+    localStorage.removeItem("user.data");
 };
 
 const getCurrentUser = () => {
-    return JSON.parse(localStorage.getItem("user"));
+    return JSON.parse(localStorage.getItem("user.headers"));
+};
+
+const getCurrentUserData = () => {
+    return JSON.parse(localStorage.getItem("user.data"));
 };
 
 export default {
     signup,
     login,
     logout,
-    getCurrentUser
+    getCurrentUser,
+    getCurrentUserData
 };

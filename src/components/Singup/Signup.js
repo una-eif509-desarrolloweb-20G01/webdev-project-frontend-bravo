@@ -2,10 +2,7 @@ import React, {useState, useEffect} from "react";
 import {Form, Alert, Input, Button} from "antd";
 import {EyeInvisibleOutlined, EyeTwoTone, UserOutlined, LockOutlined, MailOutlined} from "@ant-design/icons";
 
-import { useSelect } from "react-select-search";
-import SelectSearch from "react-select-search";
-
-import Select from 'react-select';
+import { Select } from 'antd';
 
 import DepartmentService from '../../services/department.service';
 import UserService from "../../services/user.service";
@@ -50,7 +47,6 @@ const Signup = (props) => {
     const [user, setUser] = useState(initialUserState);
     const [error, setError] = useState(false);
     const [options, setOptions] = useState([]);
-    const [selected, setSelected] = useState({});
 
     useEffect(() => {
 
@@ -59,10 +55,9 @@ const Signup = (props) => {
             const data = [];
 
             response.data.forEach((department, index ) => {
-                
                 data.push({
-                    label: department.name,
-                    value: department.id
+                    value: department.id,
+                    label: department.name
                 });
             });
 
@@ -78,8 +73,9 @@ const Signup = (props) => {
     /** Service methods **/
     const signUpMethod = () => {
         UserService.signup(user)
-            .then(response => {
-                setUser(response.data);
+            .then(res => {
+                console.log(res);
+                setUser(res.data);
                 form.resetFields();
                 setError(false);
             })
@@ -94,17 +90,12 @@ const Signup = (props) => {
         let {name, value} = event.target;
         setUser({...user, [name]: value});
     };
-
-    const handleChange = selectedOption => {
-
-        // this.setState({ selectedOption });
-        setUser({...user, "department": {
-            id: selectedOption.value,
-            name: selectedOption.label
-        }});
-
-        console.log(`Option selected:`, selectedOption);
-        console.log(user);
+    const handleChange = (option) => {
+        setUser({...user, department: {
+                id: option.value,
+                name: option.label
+            }
+        });
     };
 
     /** General Methods **/
@@ -112,7 +103,6 @@ const Signup = (props) => {
         console.log(user);
         signUpMethod();
     };
-
     const onReset = () => {
         setUser(initialUserState);
         form.resetFields();
@@ -184,12 +174,18 @@ const Signup = (props) => {
                         },
                     ]}
                 >
+
                     <Select
-                        defaultValue={""}
+                        showSearch
+                        labelInValue
+                        optionFilterProp="label"
                         name="department"
-                        value={selected}
                         onChange={handleChange}
                         options={options}
+                        placeholder="Select a department"
+                        filterOption={(input, option) =>
+                            option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
                     />
                 </Form.Item>
                 {/*  */}
@@ -240,7 +236,7 @@ const Signup = (props) => {
                     </Button>
                 </Form.Item>
             </Form>
-            {user.idUser > 0 ? (
+            {user.id ? (
                 <Alert message="User saved" type="success" showIcon closable />
             ) : null}
             {error ? (

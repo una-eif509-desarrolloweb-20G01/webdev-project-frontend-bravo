@@ -6,6 +6,7 @@ import {Form, Input, Button, Alert} from 'antd';
 import {EyeInvisibleOutlined, EyeTwoTone, UserOutlined, LockOutlined} from '@ant-design/icons';
 
 import AuthService from "../../services/auth.service";
+import userService from "../../services/user.service";
 
 const layout = {
     labelCol: {
@@ -38,18 +39,17 @@ const Login = (props) => {
     /** Service methods **/
     const loginMethod = () => {
         AuthService.login(login)
-            .then(response => {
+            .then(res => {
 
-                console.log(login);
-                setLogin(response.data);
-                form.resetFields();
-
-                props.history.push("/home");
-                window.location.reload();
-
-                // props.history.push("/priority");
-                // props.history.push("/roles");
-                // window.location.reload();
+                userService.findUserByUserName(login.username).then(res_user =>{
+                
+                    console.log(res_user);
+    
+                    localStorage.setItem("user.data",  JSON.stringify({ data: res_user.data }));
+    
+                    props.history.push("/home");
+                    window.location.reload();
+                });
             })
             .catch(err => {
                 setError(true);
@@ -68,15 +68,6 @@ const Login = (props) => {
         console.log(login);
         loginMethod();
     };
-
-    const onReset = () => {
-        form.resetFields();
-    };
-
-    const toSignUp = () => {
-        props.history.push("/signup");
-        window.location.reload();
-    }
 
     return (
         <div>
@@ -122,9 +113,6 @@ const Login = (props) => {
                     <Button type="primary" htmlType="submit" style={{marginRight: "10px"}}>
                         Login
                     </Button>
-                    {/* <Button htmlType="button" onClick={toSignUp}>
-                        Sign up
-                    </Button> */}
                 </Form.Item>
             </Form>
             {error ? (

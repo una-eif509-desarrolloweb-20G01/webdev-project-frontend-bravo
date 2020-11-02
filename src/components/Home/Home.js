@@ -16,9 +16,9 @@ const Home = (props) => {
     /** General Methods **/
 
     return (
-        <div>
+        <>
             HOME
-        </div>
+        </>
     )
 };
 

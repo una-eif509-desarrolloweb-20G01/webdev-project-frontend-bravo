@@ -5,24 +5,23 @@ import './Unauthorized.scss';
 const Unauthorized = () => {
   return (
     <div className='container'>
-        <div class="gandalf">
-        <div class="fireball"></div>
-        <div class="skirt"></div>
-        <div class="sleeves"></div>
-        <div class="shoulders">
-          <div class="hand left"></div>
-          <div class="hand right"></div>
+        <div className="gandalf">
+        <div className="fireball"></div>
+        <div className="skirt"></div>
+        <div className="sleeves"></div>
+        <div className="shoulders">
+          <div className="hand left"></div>
+          <div className="hand right"></div>
         </div>
-        <div class="head">
-          <div class="hair"></div>
-          <div class="beard"></div>
+        <div className="head">
+          <div className="hair"></div>
+          <div className="beard"></div>
         </div>
       </div>
-        <div class="message">
-            <h1>403 - You Shall Not Pass</h1>
-            <p>Uh oh, Gandalf is blocking the way!<br />Maybe you have a typo in the url? Or you meant to go to a different location? Like...Hobbiton?</p>
+        <div className="message">
+            <h1>Unauthorized</h1>
         </div>
-        <p><Link to='/'>Back to Home</Link></p>
+        <p><Link to="/">Back to Login</Link></p>
     </div>
   )
 }
