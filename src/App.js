@@ -105,6 +105,23 @@ function App() {
                                 </Link>
                             </Menu.Item>
 
+                            {userInfo.data.role.name === 'ROLE_ADMIN' ?
+                                <SubMenu className="sub-menu-reports" icon={<FileDoneOutlined />} title="Reports">
+                                    <Menu.Item key="Staff Hours">
+                                        <Link to={"/reports/staff-hours"}>
+                                            Staff Hours
+                                        </Link>
+                                    </Menu.Item>
+                                    <Menu.Item key="Summary">
+                                        <Link to={"/reports/summary"}>
+                                            Summary
+                                        </Link>
+                                    </Menu.Item>
+                                </SubMenu> 
+                                :
+                                <></>
+                            }
+
                             <SubMenu className="sub-menu-user" icon={<UserOutlined />} title={userInfo.data.firstName}>
                                 <Menu.Item icon={<LogoutOutlined />}>
                                     <a href="/login" className="nav-link" onClick={logOut}>
