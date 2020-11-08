@@ -23,25 +23,31 @@ const tailLayout = {
 
 const StaffHours = () => {
     const [form] = Form.useForm();
+    const [timeSheets, setTimeSheets] = useState(new Map());
     const [timeSheetSelectOptions, setTimeSheetSelectOptions] = useState([]);
 
     useEffect(() => {
         TimeSheetService.getAll().then(response => {
-            const data = [];
+            const data = new Map();
+            const options = [];
 
             response.data.forEach((timeSheet, index) => {
-                data.push({
+                options.push({
                     value: timeSheet.id,
                     label: timeSheet.name
                 });
+
+                data.set(timeSheet.id, timeSheet)
             });
 
-            setTimeSheetSelectOptions(data);
+            setTimeSheets(data);
+            setTimeSheetSelectOptions(options);
         });
     }, []);
 
     const onFinish = data => {
-        
+        let timeSheet = timeSheets.get(data.timesheet.value);
+        alert(JSON.stringify(timeSheet));
     };
 
     return (
