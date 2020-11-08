@@ -1,6 +1,6 @@
 import './DepartmentEditableTable.scss';
 import React, { useState, useEffect } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Button } from 'antd';
+import { PageHeader, Table, Input, InputNumber, Popconfirm, Form, Button } from 'antd';
 import DepartmentService from '../../services/department.service';
 
 const EditableCell = ({
@@ -222,8 +222,12 @@ const DepartmentEditableTable = () => {
     });
     return (
         <>
+            <PageHeader
+                className="site-page-header"
+                title="Departments"
+            />
             <Button onClick={add} type="primary" style={{ marginBottom: 16 }}>
-                Add a row
+                Add new
             </Button>
             <Form form={form} component={false}>
                 <Table

@@ -1,7 +1,7 @@
 
 import './TimeSheetsTable.scss';
-import React, { useState, useEffect, useCallback, forwardRef } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Button, Result } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { PageHeader, Table, Popconfirm, Button } from 'antd';
 
 import TimeSheetService from '../../services/timesheet.service';
 import UserService from "../../services/user.service";
@@ -108,7 +108,7 @@ const TimeSheetsTable = (props) => {
         try {
             record.data.details.forEach((detail, index ) => {
 
-                let departments = new Array();
+                let departments = [];
 
                 UserService.get(detail.employeeId)
                 .then(res => {
@@ -183,6 +183,11 @@ const TimeSheetsTable = (props) => {
 
     return (
         <>
+            <PageHeader
+                className="site-page-header"
+                title="TimeSheets"
+            />
+
             <Button onClick={add} type="primary" style={{ marginBottom: 15 }}>
                 Add New
             </Button>

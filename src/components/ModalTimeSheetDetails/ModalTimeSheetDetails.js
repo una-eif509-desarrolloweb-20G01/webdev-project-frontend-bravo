@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
-import { Table, Button, Modal, Form, Descriptions } from 'antd';
+import React from 'react';
+import { Table, Modal, Descriptions } from 'antd';
 
 const ModalTimeSheetDetails = ({ visible, onCancel, timeSheetDetails, departmentData }) => {
-
-    const [form] = Form.useForm();
 
     /** General Methods **/
 

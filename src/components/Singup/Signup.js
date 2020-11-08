@@ -1,8 +1,6 @@
 import React, {useState, useEffect} from "react";
-import {Form, Alert, Input, Button} from "antd";
+import {Form, Alert, Input, Button, Select} from "antd";
 import {EyeInvisibleOutlined, EyeTwoTone, UserOutlined, LockOutlined, MailOutlined} from "@ant-design/icons";
-
-import { Select } from 'antd';
 
 import DepartmentService from '../../services/department.service';
 import UserService from "../../services/user.service";

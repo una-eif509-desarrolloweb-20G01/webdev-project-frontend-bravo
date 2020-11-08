@@ -8,7 +8,11 @@ import {
     LogoutOutlined,
     FileDoneOutlined,
     TeamOutlined,
-    UserOutlined
+    UserOutlined,
+    CheckOutlined,
+    PlusOutlined,
+    ClockCircleOutlined,
+    UnorderedListOutlined
 } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import './App.css';
@@ -20,6 +24,8 @@ import Signup from "./components/Singup/Signup";
 import Home from "./components/Home/Home";
 
 import TimeSheetsTable from "./components/TimeSheetsTable/TimeSheetsTable";
+import ApproveTimeSheet from "./components/ApproveTimeSheet/ApproveTimeSheet";
+
 import DepartmentEditableTable from "./components/DepartmentEditableTable/DepartmentEditableTable";
 
 import StaffHours from "./components/Reports/StaffHours/StaffHours";
@@ -97,11 +103,25 @@ function App() {
                                     Home
                                 </Link>
                             </Menu.Item>
-                            <Menu.Item key="Timesheet" icon={<FileDoneOutlined />}>
-                                <Link to={"/timesheets"}>
-                                    Timesheets
-                                </Link>
-                            </Menu.Item>
+                            
+                            <SubMenu icon={<FileDoneOutlined />} title="Timesheets">
+                                
+                                {userInfo.data.role.name === 'ROLE_ADMIN' ?
+                                    <Menu.Item key="ApproveTimeSheet" icon={<CheckOutlined />}>
+                                        <Link to={"/approve-timesheets"}>
+                                            Approve
+                                        </Link>
+                                    </Menu.Item>
+                                    :
+                                    <Menu.Item key="Timesheet" icon={<PlusOutlined />}>
+                                        <Link to={"/timesheets"}>
+                                            New
+                                        </Link>
+                                    </Menu.Item>
+                                }
+                                
+                            </SubMenu>
+
                             <Menu.Item key="Department" icon={<TeamOutlined />}>
                                 <Link to={"/departments"}>
                                     Departments
@@ -110,12 +130,12 @@ function App() {
 
                             {userInfo.data.role.name === 'ROLE_ADMIN' ?
                                 <SubMenu className="sub-menu-reports" icon={<FileDoneOutlined />} title="Reports">
-                                    <Menu.Item key="Staff Hours">
+                                    <Menu.Item key="Staff Hours" icon={<ClockCircleOutlined />}>
                                         <Link to={"/reports/staff-hours"}>
                                             Staff Hours
                                         </Link>
                                     </Menu.Item>
-                                    <Menu.Item key="Summary">
+                                    <Menu.Item key="Summary" icon={<UnorderedListOutlined />}>
                                         <Link to={"/reports/summary"}>
                                             Summary
                                         </Link>
@@ -155,6 +175,8 @@ function App() {
                             <Route exact path='/home' component={Home}/>
                             <Route exact path='/departments' user={currentUser} component={DepartmentEditableTable} />
                             <Route exact path='/timesheets' user={currentUser} component={TimeSheetsTable} />
+                            
+                            <Route exact path='/approve-timesheets' user={currentUser} component={ApproveTimeSheet} />
                             <Route exact path='/reports/staff-hours' component={StaffHours}/>
                             <Route exact path='/reports/summary' component={Summary}/>
 
