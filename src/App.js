@@ -22,6 +22,9 @@ import Home from "./components/Home/Home";
 import TimeSheetsTable from "./components/TimeSheetsTable/TimeSheetsTable";
 import DepartmentEditableTable from "./components/DepartmentEditableTable/DepartmentEditableTable";
 
+import StaffHours from "./components/Reports/StaffHours/StaffHours";
+import Summary from "./components/Reports/Summary/Summary";
+
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Unauthorized from "./components/Unauthorized/Unauthorized";
 
@@ -152,6 +155,8 @@ function App() {
                             <Route exact path='/home' component={Home}/>
                             <Route exact path='/departments' user={currentUser} component={DepartmentEditableTable} />
                             <Route exact path='/timesheets' user={currentUser} component={TimeSheetsTable} />
+                            <Route exact path='/reports/staff-hours' component={StaffHours}/>
+                            <Route exact path='/reports/summary' component={Summary}/>
 
                             <Route exact path='/unauthorized' component={Unauthorized} />
                         </Switch>
