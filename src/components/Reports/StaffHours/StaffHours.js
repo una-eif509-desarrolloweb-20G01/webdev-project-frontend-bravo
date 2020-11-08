@@ -1,6 +1,6 @@
 import './StaffHours.scss';
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Select, Form, Typography  } from 'antd';
+import { Table, Button, Select, Form, Typography, Row, Col } from 'antd';
 import TimeSheetService from '../../../services/timesheet.service';
 import UserService from '../../../services/user.service';
 
@@ -149,53 +149,61 @@ const StaffHours = () => {
             </Form>
 
             {report ?
-                <div class="report">
-                    <div class="report-header">
-                        <div class="report-header-data">
-                            <label>Report Id:</label>
-                            {report.id}
-                        </div>
-                        <div class="report-header-data">
-                            <label>Department:</label>
-                            {report.department}
-                        </div>
-                        <div class="report-header-data">
-                            <label>TimeSheet:</label>
-                            {report.name}
-                        </div>
-                    </div>
-                    <div class="report-body">
-                        <Table dataSource={report.data}
-                            columns={report.columns}
-                            summary={pageData => {
-                                let totalHours = 0;
+                <>
+                    <Row>
+                        <Col span={6}></Col>
+                        <Col span={12}>
+                            <div class="report-header-data">
+                                <label>Report Id:</label>
+                                {report.id}
+                            </div>
+                            <div class="report-header-data">
+                                <label>Department:</label>
+                                {report.department}
+                            </div>
+                            <div class="report-header-data">
+                                <label>TimeSheet:</label>
+                                {report.name}
+                            </div>
+                        </Col>
+                        <Col span={6}></Col>
+                    </Row>
+                    <Row>
+                        <Col span={6}></Col>
+                        <Col span={12}>
+                            <Table dataSource={report.data}
+                                columns={report.columns}
+                                summary={pageData => {
+                                    let totalHours = 0;
 
-                                pageData.forEach(({ hoursForWeek }) => {
-                                    totalHours += hoursForWeek;
-                                });
+                                    pageData.forEach(({ hoursForWeek }) => {
+                                        totalHours += hoursForWeek;
+                                    });
 
-                                let averageHours = totalHours / pageData.length;
+                                    let averageHours = totalHours / pageData.length;
 
-                                return (
-                                    <>
-                                        <Table.Summary.Row>
-                                            <Table.Summary.Cell colSpan="2">Average Hours</Table.Summary.Cell>
-                                            <Table.Summary.Cell>
-                                                <Text>{averageHours}</Text>
-                                            </Table.Summary.Cell>
-                                        </Table.Summary.Row>
-                                        <Table.Summary.Row>
-                                            <Table.Summary.Cell colSpan="2">Total Hours</Table.Summary.Cell>
-                                            <Table.Summary.Cell>
-                                                <Text>{totalHours}</Text>
-                                            </Table.Summary.Cell>
-                                        </Table.Summary.Row>
-                                    </>
-                                );
-                            }}
-                        />
-                    </div>
-                </div>
+                                    return (
+                                        <>
+                                            <Table.Summary.Row>
+                                                <Table.Summary.Cell colSpan="2">Average Hours</Table.Summary.Cell>
+                                                <Table.Summary.Cell>
+                                                    <Text>{averageHours}</Text>
+                                                </Table.Summary.Cell>
+                                            </Table.Summary.Row>
+                                            <Table.Summary.Row>
+                                                <Table.Summary.Cell colSpan="2">Total Hours</Table.Summary.Cell>
+                                                <Table.Summary.Cell>
+                                                    <Text>{totalHours}</Text>
+                                                </Table.Summary.Cell>
+                                            </Table.Summary.Row>
+                                        </>
+                                    );
+                                }}
+                            />
+                        </Col>
+                        <Col span={6}></Col>
+                    </Row>
+                </>
                 :
                 <></>
             }
