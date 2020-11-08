@@ -2,6 +2,7 @@ import './StaffHours.scss';
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Select, Form } from 'antd';
 import TimeSheetService from '../../../services/timesheet.service';
+import UserService from '../../../services/user.service';
 
 const layout = {
     labelCol: {
@@ -25,6 +26,7 @@ const StaffHours = () => {
     const [form] = Form.useForm();
     const [timeSheets, setTimeSheets] = useState(new Map());
     const [timeSheetSelectOptions, setTimeSheetSelectOptions] = useState([]);
+    const [report, setReport] = useState(null);
 
     useEffect(() => {
         TimeSheetService.getAll().then(response => {
@@ -45,9 +47,30 @@ const StaffHours = () => {
         });
     }, []);
 
+    const generateReportId = () => {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    };
+
     const onFinish = data => {
         let timeSheet = timeSheets.get(data.timesheet.value);
         alert(JSON.stringify(timeSheet));
+
+        if (timeSheet && timeSheet.details && timeSheet.details.length > 0) {
+            UserService.get(timeSheet.details[0].employeeId).then(response => {
+                let user = response.data;
+
+                let newReport = {
+                    id: generateReportId(),
+                    department: user.department ? user.department.name : '',
+                    name: timeSheet.name
+                };
+
+                setReport(newReport);
+            });
+        }
     };
 
     return (
@@ -81,6 +104,30 @@ const StaffHours = () => {
                     </Button>
                 </Form.Item>
             </Form>
+
+            {report ?
+                <div class="report">
+                    <div class="report-header">
+                        <div class="report-header-data">
+                            <label>Report Id:</label>
+                            {report.id}
+                        </div>
+                        <div class="report-header-data">
+                            <label>Department:</label>
+                            {report.department}
+                        </div>
+                        <div class="report-header-data">
+                            <label>TimeSheet:</label>
+                            {report.name}
+                        </div>
+                    </div>
+                    <div class="report-body">
+                        
+                    </div>
+                </div>
+                :
+                <></>
+            }
         </>
     );
 
