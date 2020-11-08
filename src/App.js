@@ -20,6 +20,8 @@ import Signup from "./components/Singup/Signup";
 import Home from "./components/Home/Home";
 
 import TimeSheetsTable from "./components/TimeSheetsTable/TimeSheetsTable";
+import ApproveTimeSheet from "./components/ApproveTimeSheet/ApproveTimeSheet";
+
 import DepartmentEditableTable from "./components/DepartmentEditableTable/DepartmentEditableTable";
 
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
@@ -94,11 +96,20 @@ function App() {
                                     Home
                                 </Link>
                             </Menu.Item>
-                            <Menu.Item key="Timesheet" icon={<FileDoneOutlined />}>
-                                <Link to={"/timesheets"}>
-                                    Timesheets
-                                </Link>
-                            </Menu.Item>
+                            
+                            <SubMenu icon={<FileDoneOutlined />} title="Timesheets">
+                                <Menu.Item key="Timesheet">
+                                    <Link to={"/timesheets"}>
+                                        New
+                                    </Link>
+                                </Menu.Item>
+                                <Menu.Item key="ApproveTimeSheet">
+                                    <Link to={"/approve-timesheets"}>
+                                        Approve
+                                    </Link>
+                                </Menu.Item>
+                            </SubMenu>
+
                             <Menu.Item key="Department" icon={<TeamOutlined />}>
                                 <Link to={"/departments"}>
                                     Departments
@@ -135,6 +146,7 @@ function App() {
                             <Route exact path='/home' component={Home}/>
                             <Route exact path='/departments' user={currentUser} component={DepartmentEditableTable} />
                             <Route exact path='/timesheets' user={currentUser} component={TimeSheetsTable} />
+                            <Route exact path='/approve-timesheets' user={currentUser} component={ApproveTimeSheet} />
 
                             <Route exact path='/unauthorized' component={Unauthorized} />
                         </Switch>

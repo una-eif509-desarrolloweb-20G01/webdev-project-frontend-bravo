@@ -13,8 +13,8 @@ const create = data => {
     return http.post("/time-sheet-details", data, { headers: authHeader() });
 };
 
-const update = (data) => {
-    return http.put(`/time-sheet-details/`, data, { headers: authHeader() });
+const update = (id, data) => {
+    return http.put(`/time-sheet-details/${id}`, data, { headers: authHeader() });
 };
 
 const remove = id => {
@@ -26,5 +26,5 @@ export default {
     get,
     create,
     update,
-    remove,
+    remove
 };
