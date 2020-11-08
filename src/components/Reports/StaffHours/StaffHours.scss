@@ -1,8 +1,12 @@
-.report-header-data {
-    label {
-        font-weight: bold;
-        margin-right: 1em;
+.report {
+    .report-header-data {
+        label {
+            font-weight: bold;
+            margin-right: 1em;
+        }
+    
+        margin: 2%;
     }
 
-    margin: 2%;
+    width: 50%;
 }

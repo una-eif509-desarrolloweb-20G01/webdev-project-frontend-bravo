@@ -1,8 +1,10 @@
 import './StaffHours.scss';
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Select, Form } from 'antd';
+import { Table, Button, Select, Form, Typography  } from 'antd';
 import TimeSheetService from '../../../services/timesheet.service';
 import UserService from '../../../services/user.service';
+
+const { Text } = Typography;
 
 const layout = {
     labelCol: {
@@ -25,6 +27,7 @@ const tailLayout = {
 const StaffHours = () => {
     const [form] = Form.useForm();
     const [timeSheets, setTimeSheets] = useState(new Map());
+    const [users, setUsers] = useState(new Map());
     const [timeSheetSelectOptions, setTimeSheetSelectOptions] = useState([]);
     const [report, setReport] = useState(null);
 
@@ -45,6 +48,16 @@ const StaffHours = () => {
             setTimeSheets(data);
             setTimeSheetSelectOptions(options);
         });
+
+        UserService.getAll().then(response => {
+            const data = new Map();
+
+            response.data.forEach((user, index) => {
+                data.set(user.id, user)
+            });
+
+            setUsers(data);
+        });
     }, []);
 
     const generateReportId = () => {
@@ -59,17 +72,47 @@ const StaffHours = () => {
         alert(JSON.stringify(timeSheet));
 
         if (timeSheet && timeSheet.details && timeSheet.details.length > 0) {
-            UserService.get(timeSheet.details[0].employeeId).then(response => {
-                let user = response.data;
+            let user = users.get(timeSheet.details[0].employeeId);
 
-                let newReport = {
-                    id: generateReportId(),
-                    department: user.department ? user.department.name : '',
-                    name: timeSheet.name
-                };
+            let newReport = {
+                id: generateReportId(),
+                department: user.department ? user.department.name : '',
+                name: timeSheet.name,
+                columns: [
+                    {
+                        title: 'Employee',
+                        dataIndex: 'employee',
+                        key: 'employee',
+                    },
+                    {
+                        title: 'Type',
+                        dataIndex: 'type',
+                        key: 'type',
+                    },
+                    {
+                        title: 'Hours for Week',
+                        dataIndex: 'hoursForWeek',
+                        key: 'hoursForWeek',
+                    },
+                ],
+                data: timeSheet.details.map(detail => {
+                    let user = users.get(detail.employeeId);
 
-                setReport(newReport);
-            });
+                    return {
+                        employee: user.firstName + ' ' + user.lastName,
+                        type: user.role.name === 'ROLE_ADMIN' ? 'Management' : 'Staff',
+                        hoursForWeek: detail.hoursMonday +
+                            detail.hoursTuesday +
+                            detail.hoursWednesday +
+                            detail.hoursThursday +
+                            detail.hoursFriday +
+                            detail.hoursSaturday +
+                            detail.hoursSunday
+                    }
+                })
+            };
+
+            setReport(newReport);
         }
     };
 
@@ -122,7 +165,35 @@ const StaffHours = () => {
                         </div>
                     </div>
                     <div class="report-body">
-                        
+                        <Table dataSource={report.data}
+                            columns={report.columns}
+                            summary={pageData => {
+                                let totalHours = 0;
+
+                                pageData.forEach(({ hoursForWeek }) => {
+                                    totalHours += hoursForWeek;
+                                });
+
+                                let averageHours = totalHours / pageData.length;
+
+                                return (
+                                    <>
+                                        <Table.Summary.Row>
+                                            <Table.Summary.Cell colSpan="2">Average Hours</Table.Summary.Cell>
+                                            <Table.Summary.Cell>
+                                                <Text>{averageHours}</Text>
+                                            </Table.Summary.Cell>
+                                        </Table.Summary.Row>
+                                        <Table.Summary.Row>
+                                            <Table.Summary.Cell colSpan="2">Total Hours</Table.Summary.Cell>
+                                            <Table.Summary.Cell>
+                                                <Text>{totalHours}</Text>
+                                            </Table.Summary.Cell>
+                                        </Table.Summary.Row>
+                                    </>
+                                );
+                            }}
+                        />
                     </div>
                 </div>
                 :
