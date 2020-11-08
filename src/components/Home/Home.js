@@ -2,6 +2,7 @@
 import './Home.scss';
 
 import React from "react";
+import { PageHeader } from 'antd';
 
 const Home = (props) => {
     /**
@@ -17,7 +18,10 @@ const Home = (props) => {
 
     return (
         <>
-            HOME
+            <PageHeader
+                className="site-page-header"
+                title="Home"
+            />
         </>
     )
 };

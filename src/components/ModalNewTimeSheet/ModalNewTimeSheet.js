@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Modal, Form, Input, Radio, Descriptions, InputNumber } from 'antd';
+import { Button, Modal, Form, Input, Descriptions, InputNumber } from 'antd';
 
 const layout = {
     labelCol: {
@@ -56,6 +56,7 @@ const ModalNewTimeSheet = ({ visible, onCreate, onCancel }) => {
             .then((values) => {
                 console.log(timeSheet);
                 console.log(details);
+                setTotalHours(0);
                 onCreate(timeSheet, details, values);
                 onReset();
             })
@@ -74,7 +75,7 @@ const ModalNewTimeSheet = ({ visible, onCreate, onCancel }) => {
 
         const value = e.target.value;
         console.log(value);
-        if(value != ""){
+        if(value !== ""){
 
             let {name, value} = e.target;
             setDetails({...details, [name]: parseInt(value)});
@@ -85,7 +86,7 @@ const ModalNewTimeSheet = ({ visible, onCreate, onCancel }) => {
 
     const onChangeFocus = e => {
         const value = e.target.value;
-        if(value != ""){
+        if(value !== ""){
             setTotalHours(totalHours - parseInt(value));
         }
     };
@@ -105,7 +106,6 @@ const ModalNewTimeSheet = ({ visible, onCreate, onCancel }) => {
             okText="Create"
             cancelText="Cancel"
             onCancel={onCancel}
-            // cancelButtonProps={{ style: { display: 'none' } }}
             okButtonProps={{ style: { display: 'none' } }}
         >
             <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
