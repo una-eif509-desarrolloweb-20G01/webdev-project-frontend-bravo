@@ -8,7 +8,11 @@ import {
     LogoutOutlined,
     FileDoneOutlined,
     TeamOutlined,
-    UserOutlined
+    UserOutlined,
+    CheckOutlined,
+    PlusOutlined,
+    ClockCircleOutlined,
+    UnorderedListOutlined
 } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import './App.css';
@@ -98,16 +102,21 @@ function App() {
                             </Menu.Item>
                             
                             <SubMenu icon={<FileDoneOutlined />} title="Timesheets">
-                                <Menu.Item key="Timesheet">
-                                    <Link to={"/timesheets"}>
-                                        New
-                                    </Link>
-                                </Menu.Item>
-                                <Menu.Item key="ApproveTimeSheet">
-                                    <Link to={"/approve-timesheets"}>
-                                        Approve
-                                    </Link>
-                                </Menu.Item>
+                                
+                                {userInfo.data.role.name === 'ROLE_ADMIN' ?
+                                    <Menu.Item key="ApproveTimeSheet" icon={<CheckOutlined />}>
+                                        <Link to={"/approve-timesheets"}>
+                                            Approve
+                                        </Link>
+                                    </Menu.Item>
+                                    :
+                                    <Menu.Item key="Timesheet" icon={<PlusOutlined />}>
+                                        <Link to={"/timesheets"}>
+                                            New
+                                        </Link>
+                                    </Menu.Item>
+                                }
+                                
                             </SubMenu>
 
                             <Menu.Item key="Department" icon={<TeamOutlined />}>
@@ -118,12 +127,12 @@ function App() {
 
                             {userInfo.data.role.name === 'ROLE_ADMIN' ?
                                 <SubMenu className="sub-menu-reports" icon={<FileDoneOutlined />} title="Reports">
-                                    <Menu.Item key="Staff Hours">
+                                    <Menu.Item key="Staff Hours" icon={<ClockCircleOutlined />}>
                                         <Link to={"/reports/staff-hours"}>
                                             Staff Hours
                                         </Link>
                                     </Menu.Item>
-                                    <Menu.Item key="Summary">
+                                    <Menu.Item key="Summary" icon={<UnorderedListOutlined />}>
                                         <Link to={"/reports/summary"}>
                                             Summary
                                         </Link>
