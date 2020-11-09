@@ -1,0 +1,24 @@
+.report-header-data {
+    label {
+        font-weight: bold;
+        margin-right: 1em;
+    }
+
+    margin: 2%;
+}
+
+.report-buttons {
+    Button {
+        margin: 2.5%;
+    }
+}
+
+@media print {
+    h1 {
+        text-align: center;
+    }
+
+    Header, Form, Button, Footer, .report-buttons {
+        display: none;
+    }
+ }
