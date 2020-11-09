@@ -7,10 +7,10 @@
     margin: 2%;
 }
 
-#printButton {
-    margin: auto;
-    display: block;
-    margin-top: 5%;
+.report-buttons {
+    Button {
+        margin: 2.5%;
+    }
 }
 
 @media print {
@@ -18,7 +18,7 @@
         text-align: center;
     }
 
-    Header, Form, Button, Footer, #printButton {
+    Header, Form, Button, Footer, .report-buttons {
         display: none;
     }
  }

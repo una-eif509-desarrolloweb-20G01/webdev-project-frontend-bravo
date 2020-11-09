@@ -208,9 +208,14 @@ const StaffHours = () => {
                     <Row>
                         <Col span={6}></Col>
                         <Col span={12}>
-                            <Button id="printButton" type="primary" onClick={(event) => {window.print();}}>
-                                Print
-                            </Button>
+                            <div class="report-buttons">
+                                <Button id="printButton" type="primary" onClick={(event) => { window.print(); }}>
+                                    Print
+                                </Button>
+                                <Button id="cancelButton" type="primary" onClick={(event) => { setReport(null); }}>
+                                    Cancel
+                                </Button>
+                            </div>
                         </Col>
                         <Col span={6}></Col>
                     </Row>
