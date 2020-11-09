@@ -7,6 +7,18 @@
     margin: 2%;
 }
 
-Table {
+#printButton {
+    margin: auto;
+    display: block;
     margin-top: 5%;
 }
+
+@media print {
+    h1 {
+        text-align: center;
+    }
+
+    Header, Form, Button, Footer, #printButton {
+        display: none;
+    }
+ }

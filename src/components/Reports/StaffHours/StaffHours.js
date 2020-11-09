@@ -171,8 +171,11 @@ const StaffHours = () => {
                     <Row>
                         <Col span={6}></Col>
                         <Col span={12}>
-                            <Table dataSource={report.data}
+                            <Table
+                                dataSource={report.data}
                                 columns={report.columns}
+                                pagination={false}
+                                bordered
                                 summary={pageData => {
                                     let totalHours = 0;
 
@@ -200,6 +203,15 @@ const StaffHours = () => {
                                     );
                                 }}
                             />
+                        </Col>
+                        <Col span={6}></Col>
+                    </Row>
+                    <Row>
+                        <Col span={6}></Col>
+                        <Col span={12}>
+                            <Button id="printButton" type="primary" onClick={(event) => {window.print();}}>
+                                Print
+                            </Button>
                         </Col>
                         <Col span={6}></Col>
                     </Row>

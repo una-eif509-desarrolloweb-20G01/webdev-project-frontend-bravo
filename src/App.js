@@ -74,7 +74,7 @@ function App() {
     return (
         
         <Router>
-            <Layout className="layout" style={{height:"100vh"}} >
+            <Layout className="layout" >
                 <Header style={{paddingRight:"20px"}}>
                     <div className="logo"/>
 
