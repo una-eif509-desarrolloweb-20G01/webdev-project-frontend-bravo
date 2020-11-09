@@ -69,7 +69,6 @@ const StaffHours = () => {
 
     const onFinish = data => {
         let timeSheet = timeSheets.get(data.timesheet.value);
-        alert(JSON.stringify(timeSheet));
 
         if (timeSheet && timeSheet.details && timeSheet.details.length > 0) {
             let user = users.get(timeSheet.details[0].employeeId);
@@ -188,13 +187,13 @@ const StaffHours = () => {
                                     return (
                                         <>
                                             <Table.Summary.Row>
-                                                <Table.Summary.Cell colSpan="2">Average Hours</Table.Summary.Cell>
+                                                <Table.Summary.Cell colSpan={2}>Average Hours</Table.Summary.Cell>
                                                 <Table.Summary.Cell>
                                                     <Text>{averageHours}</Text>
                                                 </Table.Summary.Cell>
                                             </Table.Summary.Row>
                                             <Table.Summary.Row>
-                                                <Table.Summary.Cell colSpan="2">Total Hours</Table.Summary.Cell>
+                                                <Table.Summary.Cell colSpan={2}>Total Hours</Table.Summary.Cell>
                                                 <Table.Summary.Cell>
                                                     <Text>{totalHours}</Text>
                                                 </Table.Summary.Cell>
