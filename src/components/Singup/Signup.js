@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {Form, Alert, Input, Button, Select} from "antd";
+import {PageHeader, Form, Alert, Input, Button, Select} from "antd";
 import {EyeInvisibleOutlined, EyeTwoTone, UserOutlined, LockOutlined, MailOutlined} from "@ant-design/icons";
 
 import DepartmentService from '../../services/department.service';
@@ -48,11 +48,11 @@ const Signup = (props) => {
 
     useEffect(() => {
 
-        DepartmentService.getAll().then(response => {
+        DepartmentService.getAll().then(res => {
             
             const data = [];
 
-            response.data.forEach((department, index ) => {
+            res.data.forEach((department, index ) => {
                 data.push({
                     value: department.id,
                     label: department.name
@@ -107,7 +107,11 @@ const Signup = (props) => {
     };
 
     return (
-        <div>
+        <>
+            <PageHeader
+                className="site-page-header"
+                title="Sign Up"
+            />
             <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
                 <Form.Item
                     name="firstName"
@@ -240,7 +244,7 @@ const Signup = (props) => {
             {error ? (
                 <Alert message="Error in the system. Try again later." type="error" showIcon closable/>
             ) : null}
-        </div>
+        </>
     )
 };
 

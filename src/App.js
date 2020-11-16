@@ -89,7 +89,7 @@ function App() {
                             </Menu.Item>
                             <Menu.Item key="Signup" icon={<UserAddOutlined />}>
                                 <Link to={"/signup"}>
-                                    Sign up
+                                    Sign Up
                                 </Link>
                             </Menu.Item>
                             </>

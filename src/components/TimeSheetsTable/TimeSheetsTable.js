@@ -1,7 +1,7 @@
 
 import './TimeSheetsTable.scss';
 import React, { useState, useEffect } from 'react';
-import { PageHeader, Table, Popconfirm, Button } from 'antd';
+import { PageHeader, Table, Popconfirm, Button, Alert } from 'antd';
 
 import TimeSheetService from '../../services/timesheet.service';
 import UserService from "../../services/user.service";
@@ -9,20 +9,33 @@ import AuthService from "../../services/auth.service";
 
 import ModalTimeSheetDetails from '../ModalTimeSheetDetails/ModalTimeSheetDetails';
 import ModalNewTimeSheet from '../ModalNewTimeSheet/ModalNewTimeSheet';
+import ModalAddDetail from '../ModalAddDetail/ModalAddDetail';
 
-const timeSheetDetails = {
+const InitialTimeSheet = {
     id: null,
     key: "",
     name: "",
     hours: 0,
-    data: null,
+    data: {},
+    rows: []
 };
 
-const department = [{
-    key: null,
+const initialCurrentInfo = {
+    user: {
+        id: null
+    },
+    department: {
+        id: null,
+        name: ''
+    }
+}
+
+const initialAddDetail = {
+    details: [],
     id: null,
-    name: "prueba"
-}];
+    name: '',
+    hours: 0
+}
 
 const TimeSheetsTable = (props) => {
 
@@ -30,15 +43,28 @@ const TimeSheetsTable = (props) => {
      * React Hooks
      * https://reactjs.org/docs/hooks-reference.html
      */
+    const [currentUser, setCurrentInfo] = useState(initialCurrentInfo);
+
     const [visibleDetails, setVisibleDetails] = useState(false);
     const [visibleNew, setVisibleNew] = useState(false);
-    const [detailsData, setDetails] = useState(timeSheetDetails);
-    const [departmentData, setDepartment] = useState(department);
+    const [visibleAdd, setVisibleAdd] = useState(false);
+
+    const [timeSheetDetail, setTimeSheet] = useState(InitialTimeSheet);
+    const [managerList, setManagerList] = useState([]);
+
+    const [addDetail, setAddDetail] = useState(initialAddDetail);
 
     const [data, setData] = useState([]);
 
+    const [message, setMessage] = useState(false);
+
     useEffect(() => {
+        //información del usuario logueado
+        showInfo();
+
         updateTable();
+
+        getManagerList();
     }, []);
 
     /** Service methods **/
@@ -46,15 +72,49 @@ const TimeSheetsTable = (props) => {
     /** Handle actions in the Form **/
 
     /** General Methods **/
+    const getManagerList = () => {
+
+        UserService.getAll().then(res => {
+
+            console.log(res);
+
+            const data = [];
+
+            res.data.forEach((user, index) => {
+
+                if(user.role.name == 'ROLE_ADMIN'){
+                    data.push({
+                        value: user.id,
+                        label: `${user.firstName} ${user.lastName}`
+                    });
+                }
+            });
+
+            setManagerList(data);
+        });
+    };
+
+    //información del usuario logueado
+    const showInfo = () => {
+
+        let user = AuthService.getCurrentUserData();
+        console.log(user);
+
+        setCurrentInfo({
+            user: {
+                id: user.data.id
+            },
+            department: user.data.department
+        });
+    };
+
     const updateTable = () => {
 
         TimeSheetService.getAll().then(res => {
             
             const data = [];
-
+            
             res.data.forEach((timesheet, index ) => {
-
-                console.log(timesheet);
 
                 data.push({
                     key: index.toString(),
@@ -68,16 +128,41 @@ const TimeSheetsTable = (props) => {
         });
     };
 
+    const onUpdateAddDetail = () => {
+        setVisibleAdd(false);
+        updateTable();
+    };
+    const onAddDetail = (approvingManagerId, details, values) => {
+
+        let data = addDetail;
+        details.employeeId = currentUser.user.id;
+        details.approvingManagerId = approvingManagerId;
+        data.details.push(details);
+
+        TimeSheetService.update(data.id, data).then(res => {
+            if (res.status === 200) {
+                console.log(data);
+                onUpdateAddDetail();
+            }
+        });
+    };
+    const onUpdateRemoveDatail = () => {
+        setVisibleDetails(false);
+        updateTable();
+    };
+
     //modal new timeSheet
-    const onCreate = (timeSheet, details, values) => {
+    const onCreateTimeSheet = (timeSheet, approvingManagerId, details, values) => {
         
-        let user = AuthService.getCurrentUserData();
-        console.log(user);
-        details.employeeId = user.data.id;
+        console.log(currentUser);
+
+        details.employeeId = currentUser.user.id;
+        details.approvingManagerId = approvingManagerId;
 
         timeSheet.details = [details];
-        console.log(timeSheet);
         setVisibleNew(false);
+
+        console.log(timeSheet);
 
         TimeSheetService.create(timeSheet).then(res => {
             if (res.status === 200) {
@@ -85,7 +170,6 @@ const TimeSheetsTable = (props) => {
             }
         });
     };
-
     const remove = (record) => {
         TimeSheetService.remove(record.id).then(res => {
             if (res.status === 200) {
@@ -95,48 +179,87 @@ const TimeSheetsTable = (props) => {
         });
     };
 
+    //modal add detail
+    const addDetailModal = (record) => {
+
+        validateAddDetail(record.data.details, (status) => {
+
+            if(status){
+                setAddDetail(record.data);
+                setVisibleAdd(true);
+            }
+            else {
+                setMessage(true);
+                console.log("NO");
+            }
+        });
+    };
+
+    const validateAddDetail = (details, callback) => {
+
+        details.forEach((detail, index ) => {
+
+            UserService.get(detail.employeeId)
+            .then(res => {
+                
+                if(res.data.department.id == currentUser.department.id){
+                    callback(true);
+                    return false;
+                }
+                if(index == details.length - 1){
+                    callback(false);
+                    return false;
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        });
+    };
+
     //modal new timeSheet
     const add = () => {
         setVisibleNew(true);
     }
-
-    //modal timeSheetDetail
-    const details = (record) => {
+    //modal timeSheet Detail
+    const configDetails = (record) => {
         console.log("DETAILS");
         console.log(record);
 
         try {
-            record.data.details.forEach((detail, index ) => {
 
-                let departments = [];
+            record.rows = [];
+
+            record.data.details.forEach((detail, index ) => {
 
                 UserService.get(detail.employeeId)
                 .then(res => {
                     
                     console.log(res);
 
-                    departments.push({
-                        key: res.data.department.id.toString(),
-                        id: res.data.department.id,
+                    record.rows.push({
+                        key: index.toString(),
+                        employeeId: detail.employeeId,
+                        id_detail: detail.id,
+                        id_deparment: res.data.department.id,
                         department: res.data.department.name,
                         hours: getHours(detail)
                     });
 
-                    setDetails(record);
-                    setDepartment(departments);
-                    setVisibleDetails(true);
+                    if(index === record.data.details.length - 1){
+                        setTimeSheet(record);
+                        setVisibleDetails(true);
+                    }
                 })
                 .catch(err => {
                     console.log(err);
                 });
             });
-
         }
         catch(err){
             console.error(`Error trying show details ${err}`);
         }
     };
-
     const getHours = detail => {
         let totalHours = 0;
         totalHours = totalHours + detail.hoursMonday;
@@ -167,20 +290,30 @@ const TimeSheetsTable = (props) => {
         {
             title: 'Actions',
             key: 'action',
-            render: (_, record) =>
+            render: (_, record) => 
                 <>
-                <a onClick={() => details(record)}>
-                    Details
-                </a>
-                &nbsp;
-                &nbsp;
-                <Popconfirm title="Sure to delete?" onConfirm={() => remove(record)}>
-                    <a>Delete</a>
-                </Popconfirm>
+                    <a onClick={() => configDetails(record)}>
+                        Details
+                    </a>
+                    &nbsp;
+                    &nbsp;
+                    &nbsp;
+                    <a onClick={() => addDetailModal(record)}>
+                        Add Detail
+                    </a>
+                    &nbsp;
+                    &nbsp;
+                    &nbsp;
+                    <Popconfirm title="Sure to delete?" onConfirm={() => remove(record)}>
+                        <a>Delete</a>
+                    </Popconfirm>
                 </>
         }
     ];
 
+    const handleClose = () => {
+        setMessage(false);
+    };
     return (
         <>
             <PageHeader
@@ -192,6 +325,10 @@ const TimeSheetsTable = (props) => {
                 Add New
             </Button>
 
+            {message ? (
+                <Alert className="alert" message="Not the same department, please select other." type="warning" showIcon closable afterClose={handleClose}/>
+            ) : null}
+
             {/*  */}
             <Table 
                 columns={columns}
@@ -202,20 +339,32 @@ const TimeSheetsTable = (props) => {
             {/*  */}
             <ModalTimeSheetDetails
                 visible={visibleDetails}
+                onUpdate={() => onUpdateRemoveDatail()}
                 onCancel={() => {
                     setVisibleDetails(false);
                 }}
-                timeSheetDetails={detailsData}
-                departmentData={departmentData}
+                timeSheetDetail={timeSheetDetail}
+                currentUser={currentUser}
             />
 
             {/*  */}
             <ModalNewTimeSheet
                 visible={visibleNew}
-                onCreate={onCreate}
+                onCreateTimeSheet={onCreateTimeSheet}
                 onCancel={() => {
                     setVisibleNew(false);
                 }}
+                managerList={managerList}
+            />
+
+            {/*  */}
+            <ModalAddDetail
+                visible={visibleAdd}
+                onAddDetail={onAddDetail}
+                onCancel={() => {
+                    setVisibleAdd(false);
+                }}
+                managerList={managerList}
             />
         </>
     )

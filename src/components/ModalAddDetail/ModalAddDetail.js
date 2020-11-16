@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Modal, Form, Input, Descriptions, InputNumber, Select } from 'antd';
+import { Button, Modal, Form, Descriptions, InputNumber, Select } from 'antd';
 
 const layout = {
     labelCol: {
@@ -17,10 +17,6 @@ const tailLayout = {
         offset: 0,
         span: 6,
     },
-};
-
-const initialTimeSheet = {
-    name: ''
 };
 
 const approvingManagerId = null;
@@ -43,10 +39,9 @@ const required = [
     }
 ]
 
-const ModalNewTimeSheet = ({ visible, onCreateTimeSheet, onCancel, managerList }) => {
+const ModalAddDetail = ({ visible, onAddDetail, onCancel, managerList }) => {
 
     const [form] = Form.useForm();
-    const [timeSheet, setTimeSheet] = useState(initialTimeSheet);
     const [details, setDetails] = useState(initialDetails);
     const [totalHours, setTotalHours] = useState(0);
     const [manager, setManager] = useState(approvingManagerId);
@@ -57,21 +52,14 @@ const ModalNewTimeSheet = ({ visible, onCreateTimeSheet, onCancel, managerList }
         form
             .validateFields()
             .then((values) => {
-                console.log(timeSheet);
                 console.log(details);
                 setTotalHours(0);
-                onCreateTimeSheet(timeSheet, manager, details, values);
+                onAddDetail(manager, details, values);
                 onReset();
             })
             .catch((err) => {
                 console.error('Validate Failed:', err);
             });
-    };
-    
-    /** Handle actions in the Form **/
-    const handleInputChange = event => {
-        let {name, value} = event.target;
-        setTimeSheet({...timeSheet, [name]: value});
     };
     const handleChange = (option) => {
         setManager(option.value);
@@ -81,7 +69,6 @@ const ModalNewTimeSheet = ({ visible, onCreateTimeSheet, onCancel, managerList }
         const value = e.target.value;
         console.log(value);
         if(value !== ""){
-
             let {name, value} = e.target;
             setDetails({...details, [name]: parseInt(value)});
             setTotalHours(totalHours + parseInt(value));
@@ -103,24 +90,13 @@ const ModalNewTimeSheet = ({ visible, onCreateTimeSheet, onCancel, managerList }
     return (
         <Modal
             visible={visible}
-            title="New TimeSheet"
+            title="Add Detail"
             okText="Create"
             cancelText="Cancel"
             onCancel={onCancel}
             okButtonProps={{ style: { display: 'none' } }}
         >
             <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
-                <Form.Item
-                    name="name"
-                    label="TimeSheet"
-                    rules={required}
-                >
-                    <Input
-                        name="name"
-                        onChange={handleInputChange}
-                        placeholder="Name"
-                    />
-                </Form.Item>
 
                 <Form.Item
                     name="approvingManagerId"
@@ -253,9 +229,11 @@ const ModalNewTimeSheet = ({ visible, onCreateTimeSheet, onCancel, managerList }
                     <Descriptions.Item label="Total hours">{totalHours}</Descriptions.Item>
                 </Descriptions>
 
+                {/*  */}
+
                 <Form.Item {...tailLayout}>
                     <Button type="primary" htmlType="submit">
-                        Create TimeSheet
+                        Add Hours
                     </Button>
                 </Form.Item>
             </Form>
@@ -263,4 +241,4 @@ const ModalNewTimeSheet = ({ visible, onCreateTimeSheet, onCancel, managerList }
     );
 };
 
-export default ModalNewTimeSheet;
+export default ModalAddDetail;
