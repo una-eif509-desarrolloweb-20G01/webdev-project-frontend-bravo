@@ -1,7 +1,8 @@
 import React from 'react';
-import { Table, Modal, Descriptions } from 'antd';
+import { Table, Modal, Descriptions, Popconfirm } from 'antd';
+import TimeSheetDetailService from '../../services/timesheetDetails.service';
 
-const ModalTimeSheetDetails = ({ visible, onCancel, timeSheetDetails, departmentData }) => {
+const ModalTimeSheetDetails = ({ visible, onUpdate, onCancel, timeSheetDetail, currentUser }) => {
 
     /** General Methods **/
 
@@ -14,8 +15,43 @@ const ModalTimeSheetDetails = ({ visible, onCancel, timeSheetDetails, department
             title: 'Hours',
             dataIndex: 'hours',
             align: 'center'
+        },
+        {
+            title: 'Options',
+            key: 'options',
+            align: 'center',
+            render: (_, record) => {
+
+                console.log(record.employeeId);
+                console.log(currentUser.user.id);
+                console.log("---");
+
+                return currentUser.user.id === record.employeeId ?
+                    <Popconfirm title="Sure to delete?" onConfirm={() => remove(record)}>
+                        <a>Delete</a>
+                    </Popconfirm>
+                : ''
+            }
         }
     ];
+
+    const remove = (record) => {
+
+        console.log(record);
+
+        try {
+
+            TimeSheetDetailService.remove(record.id_detail).then(res => {
+                if (res.status === 200) {
+                    onUpdate();
+                }
+            });
+        }
+        catch(err) {
+            console.error(`Error trying change approve status ${err}`);
+        }
+    };
+
     return (
         <Modal
             visible={visible}
@@ -25,11 +61,11 @@ const ModalTimeSheetDetails = ({ visible, onCancel, timeSheetDetails, department
             okButtonProps={{ style: { display: 'none' } }}
         >
             <Descriptions>
-                <Descriptions.Item label="Name">{timeSheetDetails.name}</Descriptions.Item>
+                <Descriptions.Item label="Name">{timeSheetDetail.name}</Descriptions.Item>
             </Descriptions>
 
             <Descriptions>
-                <Descriptions.Item label="Hours">{timeSheetDetails.hours}</Descriptions.Item>
+                <Descriptions.Item label="Hours">{timeSheetDetail.hours}</Descriptions.Item>
             </Descriptions>
 
             <Descriptions>
@@ -39,7 +75,7 @@ const ModalTimeSheetDetails = ({ visible, onCancel, timeSheetDetails, department
             {/*  */}
             <Table 
                 columns={columns}
-                dataSource={departmentData}
+                dataSource={timeSheetDetail.rows}
                 bordered
             />
         </Modal>

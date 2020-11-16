@@ -2,7 +2,7 @@
 import './Login.scss';
 
 import React, {useState} from "react";
-import {Form, Input, Button, Alert} from 'antd';
+import {PageHeader, Form, Input, Button, Alert} from 'antd';
 import {EyeInvisibleOutlined, EyeTwoTone, UserOutlined, LockOutlined} from '@ant-design/icons';
 
 import AuthService from "../../services/auth.service";
@@ -70,8 +70,11 @@ const Login = (props) => {
     };
 
     return (
-        <div>
-
+        <>
+            <PageHeader
+                className="site-page-header"
+                title="Login"
+            />
             {/* form */}
             <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
                 <Form.Item
@@ -118,7 +121,7 @@ const Login = (props) => {
             {error ? (
                 <Alert message="Error in the system. Try again later." type="error" showIcon closable/>
             ) : null}
-        </div>
+        </>
     )
 };
 
